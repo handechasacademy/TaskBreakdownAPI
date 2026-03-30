@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ContentAPI.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ContentAPI.Filters
@@ -9,7 +10,12 @@ namespace ContentAPI.Filters
         {
             if (!context.ModelState.IsValid)
             {
-                context.Result = new BadRequestObjectResult(context.ModelState);
+                var errors = context.ModelState
+                                .Values
+                                .SelectMany(v => v.Errors)
+                                .Select(e => e.ErrorMessage);
+                var response = new ValidationErrorResponse("Validation failed", errors);
+                context.Result = new BadRequestObjectResult(response);
             }
         }
     }
