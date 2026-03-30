@@ -6,7 +6,7 @@
         public string GoalTitle { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
         public string Barriers { get; set; } = string.Empty;
-        public int ScareFactor { get; set; }
+        public int? ScareFactor { get; set; }
 
         public string MicroSteps { get; set; } = string.Empty;
         public string Encouragement { get; set; } = string.Empty;
