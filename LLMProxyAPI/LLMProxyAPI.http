@@ -1,0 +1,6 @@
+@LLMProxyAPI_HostAddress = http://localhost:5215
+
+GET {{LLMProxyAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
