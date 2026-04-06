@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="ContentAPI/ContentAPI.csproj" />
+  <Project Path="LLMProxyAPI/LLMProxyAPI.csproj" />
 </Solution>
