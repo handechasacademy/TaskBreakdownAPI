@@ -23,12 +23,16 @@ namespace LLMProxyAPI.Services
                             """;
             var requestBody = new
             {
-                inputs = fullPrompt
-            };
-            var response = await _httpClient.PostAsJsonAsync("", requestBody);
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadFromJsonAsync<List<HuggingFaceResponse>>();
-            return result?.FirstOrDefault()?.GeneratedText ?? string.Empty;
+                model = "Qwen/Qwen2.5-7B-Instruct",
+                messages = new[]
+            {
+                new { role = "user", content = fullPrompt }
+            }
+                    };
+                    var response = await _httpClient.PostAsJsonAsync("", requestBody);
+                    response.EnsureSuccessStatusCode();
+                    var result = await response.Content.ReadFromJsonAsync<ChatCompletionResponse>();
+                    return result?.Choices?[0]?.Message?.Content ?? string.Empty;
         }
     }
 }
