@@ -1,3 +1,4 @@
+using LLMProxyAPI.Middleware;
 using LLMProxyAPI.Services;
 using Scalar.AspNetCore;
 
@@ -26,6 +27,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
+
+app.UseMiddleware<ApiKeyMiddleware>();
 
 app.UseHttpsRedirection();
 

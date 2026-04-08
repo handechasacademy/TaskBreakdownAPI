@@ -6,22 +6,29 @@ namespace ContentAPI.Services
     public class TaskService : ITaskService
     {
         private readonly ITaskRepository _repository;
+        private readonly LlmProxyClient _client;
 
-        public TaskService(ITaskRepository repository)
+        public TaskService(ITaskRepository repository, LlmProxyClient client)
         {
             _repository = repository;
+            _client = client;
         }
 
         public async Task<TaskBreakdownResponse> CreateTaskBreakdownAsync(CreateTaskBreakdownRequest request)
         {
+            var microStepsPrompt = $"Break down this goal into small microsteps for someone with ADHD:\nGoal: {request.GoalTitle}\nBarriers: {request.Barriers}";
+            var encouragementPrompt = $"Write a short encouraging message for someone trying to achieve:\nGoal: {request.GoalTitle}";
+            var microSteps = await _client.GenerateAsync(microStepsPrompt);
+            var encouragement = await _client.GenerateAsync(encouragementPrompt);
+
             var task = new Models.TaskBreakdown
             {
                 GoalTitle = request.GoalTitle,
                 Category = request.Category,
                 Barriers = request.Barriers,
                 ScareFactor = request.ScareFactor,
-                MicroSteps = string.Empty, // Placeholder, to be updated later
-                Encouragement = string.Empty, // Placeholder, to be updated later
+                MicroSteps = microSteps,
+                Encouragement = encouragement,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };

@@ -19,6 +19,15 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddOpenApi();
 
+var LlmProxyAPIurl = builder.Configuration["LLMProxyAPI:BaseUrl"];
+var ApiKey = builder.Configuration["ServiceAuth:ApiKey"];
+
+builder.Services.AddHttpClient<LlmProxyClient>(client =>
+{
+    client.BaseAddress = new Uri(LlmProxyAPIurl!);
+    client.DefaultRequestHeaders.Add("X-Api-Key", ApiKey);
+});
+
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("TasksDB"));
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
