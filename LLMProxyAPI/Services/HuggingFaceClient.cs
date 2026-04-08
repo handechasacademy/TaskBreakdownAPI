@@ -13,9 +13,17 @@ namespace LLMProxyAPI.Services
 
         public async Task<String> GenerateResponseAsync(string prompt)
         {
+            var fullPrompt = $"""
+                            You are an ADHD/autism-friendly task assistant. 
+                            Break down the following goal into small, clear microsteps.
+                            Also provide a scare factor from 1-10 if not given.
+                            Be encouraging and supportive.
+    
+                            Goal: {prompt}
+                            """;
             var requestBody = new
             {
-                inputs = prompt
+                inputs = fullPrompt
             };
             var response = await _httpClient.PostAsJsonAsync("", requestBody);
             response.EnsureSuccessStatusCode();
