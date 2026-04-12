@@ -1,20 +1,55 @@
+using ContentAPI.Data;
+using ContentAPI.Filters;
+using ContentAPI.Middleware;
+using ContentAPI.Repositories;
+using ContentAPI.Services;
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidateModelAttribute>();
+}).ConfigureApiBehaviorOptions(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
+
 builder.Services.AddOpenApi();
+
+var LlmProxyAPIurl = builder.Configuration["LLMProxyAPI:BaseUrl"];
+var ApiKey = builder.Configuration["ServiceAuth:ApiKey"];
+
+// Using typed client with IHttpClientFactory to avoid socket exhaustion
+builder.Services.AddHttpClient<LlmProxyClient>(client =>
+{
+    client.BaseAddress = new Uri(LlmProxyAPIurl!);
+    client.DefaultRequestHeaders.Add("X-Api-Key", ApiKey);
+});
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("TasksDB"));
+builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
+
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
 
 app.UseAuthorization();
 

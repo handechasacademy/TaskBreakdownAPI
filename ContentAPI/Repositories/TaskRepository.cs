@@ -36,7 +36,9 @@ namespace ContentAPI.Repositories
                 query = sortBy.ToLower() switch
                 {
                     "createdat" => query.OrderBy(t => t.CreatedAt),
+                    "-createdat" => query.OrderByDescending(t => t.CreatedAt),
                     "updatedat" => query.OrderBy(t => t.UpdatedAt),
+                    "-updatedat" => query.OrderByDescending(t => t.UpdatedAt),
                     _ => query
                 };
             }
