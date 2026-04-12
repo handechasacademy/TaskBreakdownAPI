@@ -1,4 +1,5 @@
 ﻿using ContentAPI.DTOs;
+using ContentAPI.Exceptions;
 using ContentAPI.Repositories;
 
 namespace ContentAPI.Services
@@ -39,7 +40,7 @@ namespace ContentAPI.Services
         public async Task<TaskBreakdownResponse?> GetTaskBreakdownByIdAsync(int id)
         {
             var task = await _repository.GetTaskBreakdownByIdAsync(id);
-            if (task == null) return null;
+            if (task == null) throw new NotFoundException($"Task with id {id} was not found.");
             return new TaskBreakdownResponse(task.Id, task.GoalTitle, task.Category, task.Barriers, task.ScareFactor, task.MicroSteps, task.Encouragement, task.CreatedAt, task.UpdatedAt);
         }
 
@@ -52,7 +53,7 @@ namespace ContentAPI.Services
         public async Task<bool> UpdateTaskBreakdownAsync(int id, UpdateTaskBreakdownRequest request)
         {
             var existingTask = await _repository.GetTaskBreakdownByIdAsync(id);
-            if (existingTask == null) return false;
+            if (existingTask == null) throw new NotFoundException($"Task with id {id} was not found.");
             existingTask.GoalTitle = request.GoalTitle;
             existingTask.Category = request.Category;
             existingTask.Barriers = request.Barriers;
@@ -65,7 +66,7 @@ namespace ContentAPI.Services
         public async Task<bool> DeleteTaskBreakdownAsync(int id)
         {
             var existingTask = await _repository.GetTaskBreakdownByIdAsync(id);
-            if (existingTask == null) return false;
+            if (existingTask == null) throw new NotFoundException($"Task with id {id} was not found.");
             await _repository.DeleteAsync(id);
             return true;
         }
