@@ -1,5 +1,6 @@
 using ContentAPI.Data;
 using ContentAPI.Filters;
+using ContentAPI.Middleware;
 using ContentAPI.Repositories;
 using ContentAPI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,8 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
+
 
 builder.Services.AddControllers(options =>
 {
@@ -31,8 +33,11 @@ builder.Services.AddHttpClient<LlmProxyClient>(client =>
 builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("TasksDB"));
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 
 if (app.Environment.IsDevelopment())

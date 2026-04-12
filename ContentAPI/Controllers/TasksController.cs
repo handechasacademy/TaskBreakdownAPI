@@ -33,15 +33,11 @@ namespace ContentAPI.Controllers
         /// Retrieves the breakdown details for a specific task by its unique identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the task for which to retrieve breakdown details.</param>
-        /// <returns>An IActionResult containing the task breakdown details if found; otherwise, a NotFound result.</returns>
+        /// <returns>An IActionResult containing the task breakdown details if found.</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTaskBreakdownById(int id)
         {
             var result = await _taskService.GetTaskBreakdownByIdAsync(id);
-            if (result == null)
-            {
-                return NotFound();
-            }
             return Ok(result);
         }
 
@@ -64,15 +60,11 @@ namespace ContentAPI.Controllers
         /// <param name="id">The unique identifier of the task to update.</param>
         /// <param name="request">An object containing the updated breakdown information for the task. Cannot be null.</param>
         /// <returns>An IActionResult indicating the result of the update operation. Returns NoContent if the update is
-        /// successful; otherwise, returns NotFound if the task does not exist.</returns>
+        /// successful.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTaskBreakdown(int id, UpdateTaskBreakdownRequest request)
         {
             var result = await _taskService.UpdateTaskBreakdownAsync(id, request);
-            if (result == false)
-            {
-                return NotFound();
-            }
             return NoContent();
         }
 
@@ -80,16 +72,11 @@ namespace ContentAPI.Controllers
         /// Deletes the task breakdown with the specified identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the task breakdown to delete.</param>
-        /// <returns>An IActionResult indicating the result of the operation. Returns NoContent if the deletion is successful;
-        /// otherwise, NotFound if the task breakdown does not exist.</returns>
+        /// <returns>An IActionResult indicating the result of the operation. Returns NoContent if the deletion is successful.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTaskBreakdown(int id)
         {
             var success = await _taskService.DeleteTaskBreakdownAsync(id);
-            if (!success)
-            {
-                return NotFound();
-            }
             return NoContent();
         }
     }
