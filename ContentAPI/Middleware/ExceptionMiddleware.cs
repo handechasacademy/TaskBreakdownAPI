@@ -38,9 +38,10 @@ namespace ContentAPI.Middleware
                     Detail = ex.Message
                 };
 
-                httpContext.Response.StatusCode = statusCode;
                 httpContext.Response.ContentType = "application/problem+json";
-                await httpContext.Response.WriteAsJsonAsync(problem);
+                httpContext.Response.StatusCode = statusCode;
+                var json = System.Text.Json.JsonSerializer.Serialize(problem);
+                await httpContext.Response.WriteAsync(json);
 
             }
         }
