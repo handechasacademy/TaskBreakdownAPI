@@ -13,6 +13,7 @@ builder.Services.AddOpenApi();
 var huggingFaceUrl = builder.Configuration["HuggingFace:ModelUrl"];
 var huggingFaceKey = builder.Configuration["HuggingFace:ApiKey"];
 
+// Using typed client with IHttpClientFactory to avoid socket exhaustion
 builder.Services.AddHttpClient<HuggingFaceClient>(client =>
 {
     client.BaseAddress = new Uri(huggingFaceUrl!);

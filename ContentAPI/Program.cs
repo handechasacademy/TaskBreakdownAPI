@@ -24,6 +24,7 @@ builder.Services.AddOpenApi();
 var LlmProxyAPIurl = builder.Configuration["LLMProxyAPI:BaseUrl"];
 var ApiKey = builder.Configuration["ServiceAuth:ApiKey"];
 
+// Using typed client with IHttpClientFactory to avoid socket exhaustion
 builder.Services.AddHttpClient<LlmProxyClient>(client =>
 {
     client.BaseAddress = new Uri(LlmProxyAPIurl!);
