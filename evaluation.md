@@ -9,6 +9,7 @@
 | Hallucinations | Does the model invent false information? |
 | Consistency | Are responses consistent across similar prompts? |
 | Language | Is the language clear and encouraging? |
+| FaithfulnessScore | Calculated by the API: response words matching prompt words / total response words. Measures how grounded the response is in the input. |
 
 ---
 
@@ -28,12 +29,16 @@
 
 **Encouragement:** "You've got this! Let's tackle one small corner at a time..."
 
+**FaithfulnessScore (microsteps):** 0.58
+**FaithfulnessScore (encouragement):** 0.57
+
 **Analysis:**
 - Relevant and concrete steps
 - ADHD-friendly: small, specific actions
 - Encouraging tone
 - Steps assume the room has specific items (e.g. recycling bin) -- not always true
 - Only 5 steps -- could be more granular for high scare factor (7/10)
+- Low FaithfulnessScore reflects that most response words are not from the short prompt
 
 ---
 
@@ -53,11 +58,14 @@
 
 **Encouragement:** "You've got this! Every small step brings you closer to your goal..."
 
+**FaithfulnessScore (microsteps):** 0.43
+**FaithfulnessScore (encouragement):** 0.35
+
 **Analysis:**
 - Steps are logical and progressive
-- Addresses the barrier (no motivation) by suggesting a buddy
 - Encouragement is nearly identical to Test 1 -- low consistency/variation
 - "Find a workout buddy" ignores the barrier "no motivation" -- social steps can feel overwhelming for ADHD/autism users
+- Lowest encouragement score (0.35) -- response drifts furthest from the input
 
 ---
 
@@ -76,6 +84,9 @@
 5. Build a simple "Hello, World!" program.
 
 **Encouragement:** "You've got this! Every small step you take..."
+
+**FaithfulnessScore (microsteps):** 0.43
+**FaithfulnessScore (encouragement):** 0.54
 
 **Analysis:**
 - Classic and correct beginner path
@@ -97,8 +108,19 @@
 
 **Hallucination risk:** Low in these tests, but the model can confidently suggest steps that don't apply to the user's specific situation (e.g. assuming a recycling bin exists).
 
+**FaithfulnessScore limitations:** The algorithm compares word overlap between prompt and response. Short prompts naturally produce lower scores even when the response is highly relevant. It is a simple heuristic, not a semantic measure.
+
 ---
 
 ## Conclusion
 
-The model performs well for straightforward, common goals. Microsteps are generally relevant, actionable, and ADHD-friendly. The main weaknesses are repetitive encouragement, sensitivity to vague input, and occasional assumptions about the user's context. For production use, prompt engineering improvements (e.g. forcing varied encouragement, requesting more than 5 steps for high scare factors) would significantly improve output quality.
+The model performs well for straightforward, common goals. Microsteps are generally relevant, actionable, and ADHD-friendly. The main weaknesses are repetitive encouragement, sensitivity to vague input, and occasional assumptions about the user's context.
+
+| Test | Microsteps Score | Encouragement Score |
+|---|---|---|
+| Clean my room | 0.58 | 0.57 |
+| Start working out | 0.43 | 0.35 |
+| Learn to code | 0.43 | 0.54 |
+| **Average** | **0.48** | **0.49** |
+
+Average FaithfulnessScore of ~0.48 is expected given the short prompts vs long responses. The scores are consistent and reflect that the model generates useful but largely self-generated content rather than strictly echoing the input.
