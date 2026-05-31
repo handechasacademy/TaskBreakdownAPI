@@ -1,7 +1,7 @@
-﻿using ContentAPI.Exceptions;
+﻿using LLMProxyAPI.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ContentAPI.Middleware
+namespace LLMProxyAPI.Middleware
 {
     public class ExceptionMiddleware
     {
@@ -26,8 +26,6 @@ namespace ContentAPI.Middleware
 
                 var (statusCode, title) = ex switch
                 {
-                    NotFoundException => (StatusCodes.Status404NotFound, "Not Found"),
-                    ValidationException => (StatusCodes.Status400BadRequest, "Validation Error"),
                     AiServiceException aiEx => (aiEx.StatusCode, "AI Service Error"),
                     _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
                 };

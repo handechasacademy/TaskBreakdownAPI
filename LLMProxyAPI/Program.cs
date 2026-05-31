@@ -30,6 +30,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseMiddleware<ExceptionMiddleware>(); 
 app.UseMiddleware<ApiKeyMiddleware>();
 
 app.UseHttpsRedirection();
