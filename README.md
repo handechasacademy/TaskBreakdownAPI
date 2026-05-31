@@ -38,6 +38,19 @@ dotnet user-secrets set "ServiceAuth:ApiKey" "your-shared-secret-key"
 > Both services must use the **same** `ServiceAuth:ApiKey` value.  
 > Get your HuggingFace token at: https://huggingface.co/settings/tokens
 
+## API Keys in Production
+
+Never store API keys in `appsettings.json` or commit them to the repo.
+
+In production, set environment variables instead:
+
+```bash
+export HuggingFace__ApiKey="your-huggingface-token"
+export ServiceAuth__ApiKey="your-shared-secret-key"
+```
+
+ASP.NET Core automatically reads these (double underscore = nested config).
+
 ## Custom Exception Middleware
 
 The `ExceptionMiddleware` in `ContentAPI` intercepts all unhandled exceptions before they reach the client. It:
