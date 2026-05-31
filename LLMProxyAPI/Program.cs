@@ -17,6 +17,7 @@ var huggingFaceKey = builder.Configuration["HuggingFace:ApiKey"];
 builder.Services.AddHttpClient<HuggingFaceClient>(client =>
 {
     client.BaseAddress = new Uri(huggingFaceUrl!);
+    client.Timeout = TimeSpan.FromSeconds(30); // ← lägg till denna
     client.DefaultRequestHeaders.Add("Authorization", $"Bearer {huggingFaceKey}");
 });
 

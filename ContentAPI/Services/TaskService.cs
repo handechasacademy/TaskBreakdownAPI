@@ -17,8 +17,22 @@ namespace ContentAPI.Services
 
         public async Task<TaskBreakdownResponse> CreateTaskBreakdownAsync(CreateTaskBreakdownRequest request)
         {
-            var microStepsPrompt = $"Break down this goal into small microsteps for someone with ADHD:\nGoal: {request.GoalTitle}\nBarriers: {request.Barriers}";
-            var encouragementPrompt = $"Write a short encouraging message for someone trying to achieve:\nGoal: {request.GoalTitle}";
+            var microStepsPrompt = $"""
+                You are a task breakdown assistant for people with ADHD.
+                Return ONLY a numbered list of 5-7 small, concrete microsteps. 
+                No introduction, no explanation, no encouragement. Just the numbered list.
+    
+                Goal: {request.GoalTitle}
+                Barriers: {request.Barriers}
+                """;
+
+            var encouragementPrompt = $"""
+                You are a supportive coach for people with ADHD.
+                Write ONLY 2-3 short encouraging sentences. 
+                No introduction, no list, no microsteps. Just the encouragement.
+    
+                Goal: {request.GoalTitle}
+                """;
             var microSteps = await _client.GenerateAsync(microStepsPrompt);
             var encouragement = await _client.GenerateAsync(encouragementPrompt);
 
